@@ -1,0 +1,7 @@
+<p><a href="{% url 'posts:add_post' %}">Dodaj nowy temat</a> </p>
+
+{% for post in posts %}
+    <p><<h4><a href="{% url 'posts:post_detail' post.id %}"> {{ post.name }}</a></h4> utworzony przez {{ post.author }}  </p>
+{% endfor %}
+
+
