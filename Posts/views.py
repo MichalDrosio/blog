@@ -3,12 +3,12 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from Posts.forms import AddPostForm
 from Posts.models import Post
-
+from django.db.models import Q
 
 def show_all_posts(request):
     search_query = request.GET.get('search', '')
     if search_query:
-        posts = Post.objects.filter(name__icontains=search_query)
+        posts = Post.objects.filter(Q(name__icontains=search_query) | Q(text__icontains=search_query))
     else:
         posts = Post.objects.all()
     return render(request, 'posts/list_posts.html', {'posts': posts})
