@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -11,7 +12,15 @@ def show_all_posts(request):
         posts = Post.objects.filter(Q(name__icontains=search_query) | Q(text__icontains=search_query))
     else:
         posts = Post.objects.all()
-    return render(request, 'posts/list_posts.html', {'posts': posts})
+    paginator = Paginator(posts, 2)
+    page = request.GET.get('page', 1)
+    try:
+        posts_num = paginator.page(page)
+    except PageNotAnInteger:
+        posts_num = paginator.page(1)
+    except EmptyPage:
+        posts_num = paginator.page(paginator.num_pages)
+    return render(request, 'posts/list_posts.html', {'posts': posts_num, 'page':page})
 
 def add_post(request):
     if request.method == 'POST':
