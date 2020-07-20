@@ -33,12 +33,8 @@ def edit_post(request, post_id):
     else:
         return render(request, 'posts/edit_post.html', {'post': post})
 
-def delete(request):
-    post_id = request.POST.get('id')
+def delete(request, post_id):
     post = Post.objects.get(pk=post_id)
-    if request.method == 'POST':
-        post.delete()
-    posts = Post.objects.all()
-    return render(request, 'posts/list_posts.html', context={'posts':posts})
-
+    post.delete()
+    return redirect('/')
 

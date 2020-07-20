@@ -2,11 +2,7 @@
 
 {% for post in posts %}
     <p><<h4><a href="{% url 'posts:post_detail' post.id %}"> {{ post.name }}</a></h4> utworzony przez {{ post.author }}  </p>
-    <form method='POST' action='/delete-post/'>
-        {% csrf_token %}
-        <input type='hidden' value='{{ post.id }}' name='id'>
-        <input type="submit" value="Usuń">
-    </form>
+    <p><a href="{% url 'posts:delete-post' post.id %}">Skasuj</a> </p>
 {% endfor %}
 
 
