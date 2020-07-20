@@ -1,5 +1,6 @@
-{{ post.created }}
-{{ post.name }}
-{{ post.created }}
-{{ post.text }}
-<p><a href="{% url 'posts:edit_post' post.id %}">Edytuj</a></p>
+<p>{{ post.created }}</p>
+<p>{{ post.name }}</p>
+<p>{{ post.created }}</p>
+<p>{{ post.text }}</p>
+
+<p><a href="{% url 'posts:edit' post.id %}">Edytuj</a></p>
