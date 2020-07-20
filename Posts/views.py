@@ -6,7 +6,11 @@ from Posts.models import Post
 
 
 def show_all_posts(request):
-    posts = Post.objects.all()
+    search_query = request.GET.get('search', '')
+    if search_query:
+        posts = Post.objects.filter(name__icontains=search_query)
+    else:
+        posts = Post.objects.all()
     return render(request, 'posts/list_posts.html', {'posts': posts})
 
 def add_post(request):

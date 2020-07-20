@@ -1,3 +1,8 @@
+<form class="search" action="{% url 'posts:posts_list' %}">
+    <input type="search" placeholder="Szukaj" name="search">
+    <button type="submit">Search</button>
+</form>
+
 <p><a href="{% url 'posts:add_post' %}">Dodaj nowy temat</a> </p>
 
 {% for post in posts %}
