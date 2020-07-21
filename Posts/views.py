@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -52,7 +53,10 @@ def post_detail(request, post_id):
             new_comment = form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-            return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id]))
+            messages.success(request, 'Dodanp komentarz')
+        else:
+            messages.error(request, 'Wystąpił błąd podczas dodawania komentarza')
+        return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id]))
     else:
         form = CommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'form': form, 'comments': comments, 'page': page})
