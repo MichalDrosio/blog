@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -37,3 +37,7 @@ def register_user(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'account/register.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return render(request, 'posts/list_posts.html')
