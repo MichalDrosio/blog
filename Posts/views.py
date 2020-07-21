@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -64,7 +65,7 @@ def post_detail(request, post_id):
         form = CommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'form': form, 'comments': comments, 'page': page})
 
-
+@login_required
 def edit_post(request, post_id):
     post = Post.objects.get(pk=post_id)
 
