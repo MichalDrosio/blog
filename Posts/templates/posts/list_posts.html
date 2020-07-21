@@ -1,4 +1,10 @@
-<p><a href="{% url 'accounts:login' %}">Logowanie</a> </p>
+{% if request.user.is_authenticated %}
+    <p><strong>Witaj {{ request.user.email }}</strong></p>
+    <a href="{% url "accounts:logout" %}">Logout</a>
+{% else %}
+    <p><a href="{% url 'accounts:login' %}">Logowanie</a> <a href="{% url 'accounts:register' %}">Rejestracja</a> </p>
+{% endif %}
+
 
 <form class="search" action="{% url 'posts:posts_list' %}">
     <input type="search" placeholder="Szukaj" name="search">
@@ -8,7 +14,8 @@
 <p><a href="{% url 'posts:add_post' %}">Dodaj nowy temat</a> </p>
 
 {% for post in posts %}
-    <p><<h4><a href="{% url 'posts:post_detail' post.id %}"> {{ post.name }}</a></h4> utworzony przez {{ post.author }}  </p>
+    <p><<h4><a href="{% url 'posts:post_detail' post.id %}">
+    {{ post.name }}</a></h4> utworzony przez {{ post.author }} </p>
     <p><a href="{% url 'posts:delete-post' post.id %}">Skasuj</a> </p>
 {% endfor %}
 

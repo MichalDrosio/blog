@@ -10,6 +10,7 @@ from Posts.forms import AddPostForm, CommentForm
 from Posts.models import Post, Comment
 from django.db.models import Q
 
+
 def show_all_posts(request):
     search_query = request.GET.get('search', '')
     if search_query:
@@ -26,6 +27,7 @@ def show_all_posts(request):
         posts_num = paginator.page(paginator.num_pages)
     return render(request, 'posts/list_posts.html', {'posts': posts_num, 'page':page})
 
+
 def add_post(request):
     if request.method == 'POST':
         form = AddPostForm(request.POST)
@@ -35,6 +37,7 @@ def add_post(request):
     else:
         form = AddPostForm()
     return render(request, 'posts/add_post.html', {'form': form})
+
 
 def post_detail(request, post_id):
     post = Post.objects.get(pk=post_id)
@@ -53,7 +56,7 @@ def post_detail(request, post_id):
             new_comment = form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-            messages.success(request, 'Dodanp komentarz')
+            messages.success(request, 'Dodano komentarz')
         else:
             messages.error(request, 'Wystąpił błąd podczas dodawania komentarza')
         return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id]))
@@ -61,15 +64,17 @@ def post_detail(request, post_id):
         form = CommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'form': form, 'comments': comments, 'page': page})
 
+
 def edit_post(request, post_id):
     post = Post.objects.get(pk=post_id)
 
     if request.method == 'POST':
         post.text = request.POST.get('post_text')
         post.save()
-        return redirect('posts:posts_list')
+        return redirect('posts:post_detail', post_id)
     else:
         return render(request, 'posts/edit_post.html', {'post': post})
+
 
 def delete(request, post_id):
     post = Post.objects.get(pk=post_id)
