@@ -4,3 +4,19 @@
 <p>{{ post.text }}</p>
 
 <p><a href="{% url 'posts:edit' post.id %}">Edytuj</a></p>
+
+<p><strong>Dodaj komentzrz</strong></p>
+<form action="." method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj</button>
+</form>
+
+{% for comment in comments %}
+    <p><strong>Autor</strong>:{{ comment.author }}</p>
+    <p>Dodano:{{ comment.created }}</p>
+    <p><strong>Treść:</strong></p>
+    <p>{{ comment.text }}</p>
+{% endfor %}
+
+{% include 'posts/pagination.html' with page=comments %}

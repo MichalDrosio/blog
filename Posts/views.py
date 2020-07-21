@@ -1,9 +1,12 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from Posts.forms import AddPostForm
-from Posts.models import Post
+from django.urls import reverse
+
+from Posts.forms import AddPostForm, CommentForm
+from Posts.models import Post, Comment
 from django.db.models import Q
 
 def show_all_posts(request):
@@ -34,7 +37,25 @@ def add_post(request):
 
 def post_detail(request, post_id):
     post = Post.objects.get(pk=post_id)
-    return render(request, 'posts/post_detail.html', {'post': post})
+    comments = Comment.objects.filter(post_id=post)
+    paginator = Paginator(comments, 3)
+    page = request.GET.get('page', 1)
+    try:
+        comments = paginator.page(page)
+    except PageNotAnInteger:
+        comments= paginator.page(1)
+    except EmptyPage:
+        comments = paginator.page(paginator.num_pages)
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST, )
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.save()
+            return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id]))
+    else:
+        form = CommentForm()
+    return render(request, 'posts/post_detail.html', {'post': post, 'form': form, 'comments': comments, 'page': page})
 
 def edit_post(request, post_id):
     post = Post.objects.get(pk=post_id)
@@ -50,4 +71,6 @@ def delete(request, post_id):
     post = Post.objects.get(pk=post_id)
     post.delete()
     return redirect('/')
+
+
 
