@@ -1,13 +1,14 @@
-<p>{{ post.created }}</p>
-<p>{{ post.name }}</p>
-<p>{{ post.created }}</p>
-<p>{{ post.text }}</p>
+<p>Utworzono: {{ post.created }}</p>
+<p>Tytuł: {{ post.name }}</p>
+<p>Treść: {{ post.text }}</p>
 
 {% if request.user.is_authenticated %}
     {% if post.user == request.user  %}
 <p><a href="{% url 'posts:edit' post.id %}">Edytuj</a></p>
         {% endif %}
 {% endif %}
+
+
 <p><strong>Dodaj komentzrz</strong></p>
 <form action="." method="post">
     {{ form.as_p }}
@@ -20,6 +21,11 @@
     <p>Dodano:{{ comment.created }}</p>
     <p><strong>Treść:</strong></p>
     <p>{{ comment.text }}</p>
-{% endfor %}
+    {% if request.user.is_authenticated %}
+    {% if post.user == request.user  %}
+    <p><a href="{% url 'posts:comment_edit' comment.id %}">Edytuj komentarz</a> </p>
+            {% endif %}
+{% endif %}
+    {% endfor %}
 
 {% include 'posts/pagination.html' with page=comments %}

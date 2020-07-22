@@ -58,6 +58,7 @@ def post_detail(request, post_id):
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.post = post
+            new_comment.user = request.user
             new_comment.save()
             messages.success(request, 'Dodano komentarz')
         else:
@@ -90,4 +91,12 @@ def user_posts(request):
     return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts})
 
 
-
+def comment_edit(request, comment_id):
+    comments = Comment.objects.filter(user=request.user)
+    comment = comments.get(pk=comment_id)
+    if request.method == 'POST':
+        comment.text = request.POST.get('comment_text')
+        comment.save()
+        return redirect('posts:post_detail', comment.post.id)
+    else:
+        return render(request, 'posts/edit_comment.html', {'comment': comment})
