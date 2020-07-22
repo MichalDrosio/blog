@@ -1,6 +1,6 @@
 from django.urls import path
 
-from Posts.views import show_all_posts, add_post, post_detail, edit_post, delete
+from Posts.views import show_all_posts, add_post, post_detail, edit_post, delete, user_posts
 
 app_name = 'posts'
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('post-detail/<int:post_id>/', post_detail, name='post_detail'),
     path('edit/<int:post_id>', edit_post, name='edit'),
     path('delete-post/<int:post_id>/', delete, name='delete-post'),
+    path('history-posts', user_posts, name='user_posts'),
 
 ]

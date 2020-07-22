@@ -31,9 +31,11 @@ def show_all_posts(request):
 
 def add_post(request):
     if request.method == 'POST':
-        form = AddPostForm(request.POST)
+        form = AddPostForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_post = form.save(commit=False)
+            new_post.user = request.user
+            new_post.save()
             return redirect('posts:posts_list')
     else:
         form = AddPostForm()
@@ -81,6 +83,11 @@ def delete(request, post_id):
     post = Post.objects.get(pk=post_id)
     post.delete()
     return redirect('/')
+
+
+def user_posts(request):
+    owner_posts = Post.objects.filter(user=request.user).order_by('-created')
+    return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts})
 
 
 
