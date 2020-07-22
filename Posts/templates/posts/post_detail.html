@@ -3,8 +3,11 @@
 <p>{{ post.created }}</p>
 <p>{{ post.text }}</p>
 
+{% if request.user.is_authenticated %}
+    {% if post.user == request.user  %}
 <p><a href="{% url 'posts:edit' post.id %}">Edytuj</a></p>
-
+        {% endif %}
+{% endif %}
 <p><strong>Dodaj komentzrz</strong></p>
 <form action="." method="post">
     {{ form.as_p }}

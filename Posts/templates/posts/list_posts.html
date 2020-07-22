@@ -16,7 +16,9 @@
 {% for post in posts %}
     <p><<h4><a href="{% url 'posts:post_detail' post.id %}">
     {{ post.name }}</a></h4> utworzony przez {{ post.author }} </p>
+    {% if request.user.is_authenticated %}
     <p><a href="{% url 'posts:delete-post' post.id %}">Skasuj</a> </p>
+    {% endif %}
 {% endfor %}
 
 

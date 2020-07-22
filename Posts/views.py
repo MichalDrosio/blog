@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -69,8 +69,8 @@ def post_detail(request, post_id):
 
 @login_required
 def edit_post(request, post_id):
-    post = Post.objects.get(pk=post_id)
-
+    posts = Post.objects.filter(user=request.user)
+    post = posts.get(pk=post_id)
     if request.method == 'POST':
         post.text = request.POST.get('post_text')
         post.save()
