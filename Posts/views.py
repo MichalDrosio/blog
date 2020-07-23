@@ -34,8 +34,11 @@ def add_post(request):
         form = AddPostForm(data=request.POST)
         if form.is_valid():
             new_post = form.save(commit=False)
-            new_post.user = request.user
-            new_post.save()
+            try:
+                new_post.user = request.user
+                new_post.save()
+            except ValueError:
+                new_post.save()
             return redirect('posts:posts_list')
     else:
         form = AddPostForm()
@@ -58,8 +61,11 @@ def post_detail(request, post_id):
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.post = post
-            new_comment.user = request.user
-            new_comment.save()
+            try:
+                new_comment.user = request.user
+                new_comment.save()
+            except ValueError:
+                new_comment.save()
             messages.success(request, 'Dodano komentarz')
         else:
             messages.error(request, 'Wystąpił błąd podczas dodawania komentarza')
@@ -79,18 +85,18 @@ def edit_post(request, post_id):
     else:
         return render(request, 'posts/edit_post.html', {'post': post})
 
-
+@login_required
 def delete(request, post_id):
     post = Post.objects.get(pk=post_id)
     post.delete()
     return redirect('/')
 
-
+@login_required
 def user_posts(request):
     owner_posts = Post.objects.filter(user=request.user).order_by('-created')
     return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts})
 
-
+@login_required
 def comment_edit(request, comment_id):
     comments = Comment.objects.filter(user=request.user)
     comment = comments.get(pk=comment_id)

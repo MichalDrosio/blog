@@ -8,12 +8,13 @@ class LoginForm(forms.Form):
 
 class UserRegistrationForm(forms.ModelForm):
     email = forms.EmailField(label='Email', widget=forms.EmailInput)
+    username = forms.CharField(label='Nick', max_length=50)
     password = forms.CharField(label='Hasło', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Powtórz hasło', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields =  ('email',)
+        fields =  ('email', 'username')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
