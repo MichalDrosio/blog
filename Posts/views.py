@@ -87,6 +87,7 @@ def post_detail(request, post_id):
         form = CommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'form': form, 'comments': comments, 'page': page})
 
+
 @login_required
 def edit_post(request, post_id):
     posts = Post.objects.filter(user=request.user)
@@ -98,6 +99,7 @@ def edit_post(request, post_id):
     else:
         return render(request, 'posts/edit_post.html', {'post': post})
 
+
 @login_required
 def delete(request, post_id):
     posts = Post.objects.filter(user=request.user)
@@ -105,11 +107,13 @@ def delete(request, post_id):
     post.delete()
     return redirect('/')
 
+
 @login_required
 def user_posts_and_comment(request):
     owner_posts = Post.objects.filter(user=request.user).order_by('-created')
     owner_comments = Comment.objects.filter(user=request.user).order_by('-created')
     return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts, 'owner_comments': owner_comments})
+
 
 @login_required
 def comment_edit(request, comment_id):
@@ -121,3 +125,12 @@ def comment_edit(request, comment_id):
         return redirect('posts:post_detail', comment.post.id)
     else:
         return render(request, 'posts/edit_comment.html', {'comment': comment})
+
+
+@login_required
+def delete_comment(request, post_id, comment_id):
+    post = Post.objects.get(pk=post_id)
+    comments = Comment.objects.filter(user=request.user)
+    comment = comments.get(pk=comment_id)
+    comment.delete()
+    return redirect('posts:post_detail', post_id)
