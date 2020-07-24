@@ -41,8 +41,9 @@ def register_user(request):
     return render(request, 'account/register.html', {'form': form})
 
 def user_logout(request):
+    posts = Post.objects.all()
     logout(request)
-    return render(request, 'posts/list_posts.html')
+    return render(request, 'posts/list_posts.html', {'posts': posts})
 
 def edit_user(request):
     if request.method == "POST":

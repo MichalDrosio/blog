@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 
@@ -48,6 +49,18 @@ def add_post(request):
 def post_detail(request, post_id):
     post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post)
+
+
+    try:
+        vote = int(request.POST.get('vote'))
+        if vote == 1 or vote == -1:
+            post.vote += vote
+            post.save()
+    except TypeError:
+        pass
+    except IntegrityError:
+        pass
+
     paginator = Paginator(comments, 3)
     page = request.GET.get('page', 1)
     try:
@@ -87,14 +100,16 @@ def edit_post(request, post_id):
 
 @login_required
 def delete(request, post_id):
-    post = Post.objects.get(pk=post_id)
+    posts = Post.objects.filter(user=request.user)
+    post = posts.get(pk=post_id)
     post.delete()
     return redirect('/')
 
 @login_required
-def user_posts(request):
+def user_posts_and_comment(request):
     owner_posts = Post.objects.filter(user=request.user).order_by('-created')
-    return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts})
+    owner_comments = Comment.objects.filter(user=request.user).order_by('-created')
+    return render(request, 'posts/owner_posts.html', {'owner_posts': owner_posts, 'owner_comments': owner_comments})
 
 @login_required
 def comment_edit(request, comment_id):

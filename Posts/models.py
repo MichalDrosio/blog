@@ -9,6 +9,7 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     author = models.CharField(max_length=30)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    vote = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ('-text',)

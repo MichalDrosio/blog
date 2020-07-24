@@ -1,13 +1,23 @@
 <p>Utworzono: {{ post.created }}</p>
 <p>Tytuł: {{ post.name }}</p>
 <p>Treść: {{ post.text }}</p>
-
+<p>Polubienia: {{ post.vote }}</p>
 {% if request.user.is_authenticated %}
     {% if post.user == request.user  %}
 <p><a href="{% url 'posts:edit' post.id %}">Edytuj</a></p>
         {% endif %}
 {% endif %}
 
+<form method="post">
+    {% csrf_token %}
+    <input type="number" value="1" name="vote" hidden>
+    <input type="submit" value="Polub post">
+</form>
+<form method="post">
+    {% csrf_token %}
+    <input type="number" value="-1" name="vote" hidden>
+    <input type="submit" value="Nie lubię postu">
+</form>
 
 <p><strong>Dodaj komentzrz</strong></p>
 <form action="." method="post">
@@ -21,11 +31,12 @@
     <p>Dodano:{{ comment.created }}</p>
     <p><strong>Treść:</strong></p>
     <p>{{ comment.text }}</p>
-    {% if request.user.is_authenticated %}
-    {% if comment.user == request.user  %}
-    <p><a href="{% url 'posts:comment_edit' comment.id %}">Edytuj komentarz</a> </p>
+
+        {% if request.user.is_authenticated %}
+            {% if comment.user == request.user  %}
+                <p><a href="{% url 'posts:comment_edit' comment.id %}">Edytuj komentarz</a> </p>
             {% endif %}
-{% endif %}
-    {% endfor %}
+        {% endif %}
+{% endfor %}
 
 {% include 'posts/pagination.html' with page=comments %}
