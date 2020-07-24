@@ -13,6 +13,8 @@ from Posts.models import Post, Comment
 from django.db.models import Q
 
 
+
+
 def show_all_posts(request):
     search_query = request.GET.get('search', '')
     if search_query:
@@ -29,10 +31,11 @@ def show_all_posts(request):
         posts_num = paginator.page(paginator.num_pages)
     return render(request, 'posts/list_posts.html', {'posts': posts_num, 'page':page})
 
-
+@login_required
 def add_post(request):
     if request.method == 'POST':
-        form = AddPostForm(data=request.POST)
+        data = request.POST
+        form = AddPostForm(data, request.FILES)
         if form.is_valid():
             new_post = form.save(commit=False)
             try:
@@ -49,7 +52,7 @@ def add_post(request):
 def post_detail(request, post_id):
     post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post_id=post)
-
+    data = request.POST
 
     try:
         vote = int(request.POST.get('vote'))
@@ -70,7 +73,7 @@ def post_detail(request, post_id):
     except EmptyPage:
         comments = paginator.page(paginator.num_pages)
     if request.method == 'POST':
-        form = CommentForm(data=request.POST, )
+        form = CommentForm(data, request.FILES)
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.post = post
@@ -134,3 +137,5 @@ def delete_comment(request, post_id, comment_id):
     comment = comments.get(pk=comment_id)
     comment.delete()
     return redirect('posts:post_detail', post_id)
+
+

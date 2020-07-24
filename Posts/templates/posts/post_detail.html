@@ -1,6 +1,9 @@
 <p>Utworzono: {{ post.created }}</p>
 <p>Tytuł: {{ post.name }}</p>
 <p>Treść: {{ post.text }}</p>
+
+<ul>{% if post.image %}<img src="{{ post.image.url }}"width="250px"/>{% endif %}</ul>
+
 <p>Polubienia: {{ post.vote }}</p>
 {% if request.user.is_authenticated %}
     {% if post.user == request.user  %}
