@@ -1,3 +1,4 @@
+Obecna data: {{ now }}
 <p>Utworzono: {{ post.created }}</p>
 <p>Tytuł: {{ post.name }}</p>
 <p>Treść: {{ post.text }}</p>
@@ -28,6 +29,8 @@
     {% csrf_token %}
     <button type="submit" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj</button>
 </form>
+
+
 
 {% for comment in comments %}
     <p><strong>Autor</strong>:{{ comment.author }}</p>

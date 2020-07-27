@@ -97,6 +97,7 @@ def edit_post(request, post_id):
     post = posts.get(pk=post_id)
     if request.method == 'POST':
         post.text = request.POST.get('post_text')
+        post.image = request.POST.get('post_image')
         post.save()
         return redirect('posts:post_detail', post_id)
     else:
@@ -132,7 +133,6 @@ def comment_edit(request, comment_id):
 
 @login_required
 def delete_comment(request, post_id, comment_id):
-    post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(user=request.user)
     comment = comments.get(pk=comment_id)
     comment.delete()

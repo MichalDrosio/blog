@@ -1,3 +1,6 @@
+Obecna data: {{ now }}
+
+
 {% if request.user.is_authenticated %}
     <p><strong>Witaj {{ request.user.email }}</strong> </p>
     <p><a href="{% url 'accounts:edit_user' %}">Edytuj profil</a>  <a href="{% url 'posts:user_posts' %}">Twoja aktywność</a> </p>

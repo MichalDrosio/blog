@@ -3,7 +3,8 @@
 Autor:{{ post.author }}</strong>
 
 <form method="post">
-<td class="col-7"><textarea class="w-100 p-1" rows="5" name="post_text">{{ post.text }}</textarea>
+    <td class="col-7"><textarea class="w-100 p-1" rows="5" name="post_text">{{ post.text }}</textarea></td>
+    <td class="col-7">class="w-100 p-1" name="post_image">{{ post.image }}</td>
     {% csrf_token %}
     <button type="submit" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
 
